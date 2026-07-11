@@ -20,13 +20,6 @@ export function OgPreview() {
           <span>10,000,000 taps.</span>
           <span>One ChatGPT reset.</span>
         </h1>
-        <p className="og-preview-description">
-          Tap the button. Help the internet earn a collective reset.
-        </p>
-        <div className="og-preview-cta" aria-hidden="true">
-          <span>Tap for reset</span>
-          <span>↗</span>
-        </div>
       </section>
 
       <footer className="og-preview-footer">

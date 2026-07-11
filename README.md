@@ -21,7 +21,7 @@ The production URL is set to `https://chatgptreset.com/` across the canonical ta
 
 - Search title and description, canonical URL, crawler rules, and large image previews.
 - Open Graph and X card metadata with a 1200×630 black editorial social graphic.
-- The social graphic uses a large explanatory headline and a generated monochrome 3D click scene with a cursor pressing the reset button as ChatGPT tokens and tap numbers burst outward. It is rendered deterministically at `/?og-preview=1` so the typography stays crisp.
+- The social graphic uses only a large explanatory headline and a generated monochrome 3D click scene with a cursor pointer pressing the reset button as ChatGPT tokens and tap numbers burst outward. It intentionally has no description or CTA. It is rendered deterministically at `/?og-preview=1` so the typography stays crisp.
 - `WebSite`, `WebPage`, and `WebApplication` structured data.
 - Sitemap, robots file, web app manifest, favicon set, Apple icon, and install icons.
 - Apex-domain redirect and basic production security headers for Vercel.

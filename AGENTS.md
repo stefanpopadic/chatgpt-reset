@@ -20,7 +20,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Side labels are muted and smaller than their values. The remaining helper is muted, smaller, and parenthesized as “(taps for next reset).”
 - Earned-reset status uses the capped campaign format `0/3 resets earned`; three resets is the visible maximum.
 - Every user-facing number uses English thousands separators, for example `546,050`, never `546050`.
-- The Open Graph headline is “10,000,000 taps. One ChatGPT reset.” with a short explainer and white “Tap for reset” pill, so the idea is immediately clear in a social feed.
+- The Open Graph headline is “10,000,000 taps. One ChatGPT reset.” with no description and no CTA pill. Keep only the eyebrow, headline, 3D cursor-pointer scene, header, and footer.
 - Each successful interaction immediately launches an OpenAI-mark token from the button into a real gravity/collision simulation; tokens collect along the bottom with a performance cap on visible bodies.
 - Button feedback must feel instant and must not wait for the network request before returning to rest.
 - The central button is surrounded by a live circular progress ring using the same monochrome structure as the Open Graph graphic.
