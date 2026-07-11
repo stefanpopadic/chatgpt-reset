@@ -305,6 +305,7 @@ a {
   position: absolute;
   top: 0;
   left: 0;
+  transform: translate3d(-100px, -100px, 0);
   display: grid;
   place-items: center;
   border: 1px solid #d9dad7;

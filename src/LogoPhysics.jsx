@@ -11,9 +11,33 @@ import Matter from "matter-js";
 const MAX_VISIBLE_LOGOS = 140;
 const LOGO_ASSET = "/assets/openai-mark.svg";
 const LOGO_SIZE = 48;
+const PHYSICS_TOP = 72;
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
+}
+
+function tokenTransform(x, y, angle, size) {
+  return `translate3d(${x - size / 2}px, ${y - size / 2}px, 0) rotate(${angle}rad)`;
+}
+
+function keepBodyInsideViewport(body, size) {
+  const radius = size / 2;
+  const minX = radius;
+  const maxX = window.innerWidth - radius;
+  const minY = PHYSICS_TOP + radius;
+  const nextX = Math.min(maxX, Math.max(minX, body.position.x));
+  const nextY = Math.max(minY, body.position.y);
+
+  if (nextX === body.position.x && nextY === body.position.y) return;
+
+  const velocity = { ...body.velocity };
+  if (body.position.x < minX && velocity.x < 0) velocity.x *= -0.55;
+  if (body.position.x > maxX && velocity.x > 0) velocity.x *= -0.55;
+  if (body.position.y < minY && velocity.y < 0) velocity.y *= -0.55;
+
+  Matter.Body.setPosition(body, { x: nextX, y: nextY });
+  Matter.Body.setVelocity(body, velocity);
 }
 
 export const LogoPhysics = forwardRef(function LogoPhysics(_, ref) {
@@ -43,6 +67,7 @@ export const LogoPhysics = forwardRef(function LogoPhysics(_, ref) {
       Matter.Bodies.rectangle(width / 2, height + 5, width + 200, 90, wallOptions),
       Matter.Bodies.rectangle(-30, height / 2, 60, height * 3, wallOptions),
       Matter.Bodies.rectangle(width + 30, height / 2, 60, height * 3, wallOptions),
+      Matter.Bodies.rectangle(width / 2, PHYSICS_TOP - 45, width + 200, 90, wallOptions),
     ];
 
     boundariesRef.current = boundaries;
@@ -64,7 +89,13 @@ export const LogoPhysics = forwardRef(function LogoPhysics(_, ref) {
         const element = elementsRef.current.get(id);
         if (!element) return;
 
-        element.style.transform = `translate3d(${body.position.x - size / 2}px, ${body.position.y - size / 2}px, 0) rotate(${body.angle}rad)`;
+        keepBodyInsideViewport(body, size);
+        element.style.transform = tokenTransform(
+          body.position.x,
+          body.position.y,
+          body.angle,
+          size,
+        );
       });
     };
 
@@ -107,7 +138,14 @@ export const LogoPhysics = forwardRef(function LogoPhysics(_, ref) {
     bodiesRef.current.set(id, { body, size });
     tokenOrderRef.current.push(id);
     Matter.Composite.add(engine.world, body);
-    setTokens((current) => [...current, { id, size }]);
+    setTokens((current) => [
+      ...current,
+      {
+        id,
+        size,
+        initialTransform: tokenTransform(originX, originY, body.angle, size),
+      },
+    ]);
 
     if (tokenOrderRef.current.length > MAX_VISIBLE_LOGOS) {
       const oldestId = tokenOrderRef.current.shift();
@@ -131,7 +169,11 @@ export const LogoPhysics = forwardRef(function LogoPhysics(_, ref) {
             if (element) elementsRef.current.set(token.id, element);
             else elementsRef.current.delete(token.id);
           }}
-          style={{ height: token.size, width: token.size }}
+          style={{
+            height: token.size,
+            transform: token.initialTransform,
+            width: token.size,
+          }}
         >
           <img alt="" draggable="false" src={LOGO_ASSET} />
         </span>

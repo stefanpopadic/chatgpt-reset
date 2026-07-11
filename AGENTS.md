@@ -22,6 +22,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Every user-facing number uses English thousands separators, for example `546,050`, never `546050`.
 - The Open Graph headline is “10,000,000 taps. One ChatGPT reset.” with no description and no CTA pill. Keep only the eyebrow, headline, 3D cursor-pointer scene, header, and footer.
 - Each successful interaction immediately launches an OpenAI-mark token from the button into a real gravity/collision simulation; tokens collect along the bottom with a performance cap on visible bodies.
+- Physics tokens must receive their spawn transform in the first React render; never allow an unpositioned token to flash at `top: 0; left: 0`. Keep token centers below the 72px header safe-zone and inside the horizontal viewport bounds.
 - Button feedback must feel instant and must not wait for the network request before returning to rest.
 - The central button is surrounded by a live circular progress ring using the same monochrome structure as the Open Graph graphic.
 - Each tap plays a short synthesized pop and uses a clearly tactile press: immediate 0.945 depression with inset depth, followed by a 210ms spring release, surface flash, and supported-device micro vibration.
