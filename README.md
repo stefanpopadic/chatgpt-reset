@@ -13,6 +13,7 @@ An unofficial one-button internet experiment. Every tap advances a shared global
 - Matter.js gravity, collision, and stacking: every click launches an OpenAI-mark token from the reset button into a growing pile at the bottom of the screen.
 - Tactile press depth, spring-release feedback, supported-device micro vibration, and a locally generated 110ms tap-pop sound on each click.
 - Atomic global counter backed by Neon Postgres.
+- Server-side anti-bot protection: same-origin signed tap proofs, a 40-tap burst ceiling, a 200-tap-per-minute ceiling, and a temporary five-minute cooldown. Rejected requests never change either counter.
 - Local in-memory fallback when `DATABASE_URL` is not configured.
 
 ## Launch package
@@ -37,7 +38,7 @@ Install dependencies and run the development server. Add a private `.env.local` 
 
 Neon project: `chatgpt-reset`
 
-The database uses one singleton `reset_campaign` row for the global number and one `reset_tappers` row per hashed IP. A single SQL statement increments both counters atomically without accounts or raw IP storage.
+The database uses one singleton `reset_campaign` row for the global number, one `reset_tappers` row per hashed IP, and one short rate-limit record per hashed IP. A single SQL statement checks the limit and increments both counters atomically without accounts or raw IP storage.
 
 People sharing one public IP, such as the same office or home network, also share the same “My taps” number.
 

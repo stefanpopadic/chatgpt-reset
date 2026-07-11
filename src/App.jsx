@@ -27,6 +27,9 @@ export function App() {
   const physicsRef = useRef(null);
   const pressTimerRef = useRef(null);
   const tapAudioRef = useRef(null);
+  const tapProofRef = useRef("");
+  const cooldownTimerRef = useRef(null);
+  const cooldownUntilRef = useRef(0);
 
   useEffect(() => {
     let active = true;
@@ -38,6 +41,7 @@ export function App() {
       })
       .then((data) => {
         if (!active) return;
+        tapProofRef.current = data.tapProof ?? "";
         setCampaign(data);
         setStatus("ready");
       })
@@ -52,6 +56,7 @@ export function App() {
 
   useEffect(() => () => {
     window.clearTimeout(pressTimerRef.current);
+    window.clearTimeout(cooldownTimerRef.current);
     tapAudioRef.current?.pause();
   }, []);
 
@@ -88,7 +93,22 @@ export function App() {
     }, 220);
   }
 
-  async function addTap() {
+  function rollbackOptimisticTap() {
+    setCampaign((current) => ({
+      ...current,
+      tapCount: Math.max(0, current.tapCount - 1),
+      myTapCount: Math.max(0, (current.myTapCount ?? 0) - 1),
+    }));
+  }
+
+  async function addTap(event) {
+    const isTrustedInteraction = event?.nativeEvent?.isTrusted ?? event?.isTrusted;
+    if (
+      isTrustedInteraction === false
+      || !tapProofRef.current
+      || Date.now() < cooldownUntilRef.current
+    ) return;
+
     const buttonBounds = buttonRef.current?.getBoundingClientRect();
     physicsRef.current?.spawn({
       x: buttonBounds ? buttonBounds.left + buttonBounds.width / 2 : undefined,
@@ -106,17 +126,55 @@ export function App() {
     }));
 
     try {
-      const response = await fetch("/api/counter", { method: "POST" });
+      const response = await fetch("/api/counter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tapProof: tapProofRef.current }),
+      });
+      const savedCampaign = await response.json().catch(() => ({}));
+
+      if (response.status === 429) {
+        rollbackOptimisticTap();
+        const retryAfter = Number(savedCampaign.retryAfter
+          ?? response.headers.get("Retry-After")
+          ?? 60);
+
+        window.clearTimeout(cooldownTimerRef.current);
+        cooldownUntilRef.current = Date.now() + Math.max(1, retryAfter) * 1_000;
+        setStatus("limited");
+        cooldownTimerRef.current = window.setTimeout(() => {
+          cooldownUntilRef.current = 0;
+          setStatus("ready");
+        }, Math.max(1, retryAfter) * 1_000);
+        return;
+      }
+
+      if (response.status === 403) {
+        rollbackOptimisticTap();
+        try {
+          const refreshResponse = await fetch("/api/counter");
+          if (!refreshResponse.ok) throw new Error("Tap verification refresh failed.");
+          const refreshedCampaign = await refreshResponse.json();
+          tapProofRef.current = refreshedCampaign.tapProof ?? "";
+          setCampaign(refreshedCampaign);
+          setStatus("ready");
+        } catch {
+          setStatus("offline");
+        }
+        return;
+      }
+
       if (!response.ok) throw new Error("Tap failed.");
-      const savedCampaign = await response.json();
+      tapProofRef.current = savedCampaign.tapProof ?? tapProofRef.current;
       setCampaign((current) => ({
         ...savedCampaign,
         tapCount: Math.max(current.tapCount, savedCampaign.tapCount),
         myTapCount: Math.max(current.myTapCount ?? 0, savedCampaign.myTapCount ?? 0),
       }));
-      setStatus("ready");
+      if (Date.now() >= cooldownUntilRef.current) setStatus("ready");
     } catch {
-      setStatus("offline");
+      rollbackOptimisticTap();
+      if (Date.now() >= cooldownUntilRef.current) setStatus("offline");
     }
   }
 
@@ -131,6 +189,8 @@ export function App() {
         <p id="tap-status" className={`header-status ${status}`} aria-live="polite">
           {status === "offline"
             ? "Couldn’t reach the global counter."
+            : status === "limited"
+              ? "Too fast — taps paused briefly."
             : `${formatNumber.format(Math.min(resetsEarned, MAX_RESETS))}/${MAX_RESETS} resets earned`}
         </p>
         <p className="countdown" aria-live="polite">
@@ -166,10 +226,12 @@ export function App() {
               className="reset-button"
               type="button"
               onClick={addTap}
-              disabled={status === "loading"}
+              disabled={status === "loading" || status === "limited"}
               aria-describedby="tap-status taps-remaining"
             >
-              <span>{status === "loading" ? "Loading" : "Tap for reset"}</span>
+              <span>
+                {status === "loading" ? "Loading" : status === "limited" ? "Cooldown" : "Tap for reset"}
+              </span>
             </button>
           </div>
 

@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "node --test server/*.test.mjs",
     "seo:check": "node scripts/check-seo.mjs",
     "launch:check": "npm run build && npm run seo:check"
   },
