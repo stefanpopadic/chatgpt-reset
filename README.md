@@ -2,7 +2,7 @@
 
 Status: live at [chatgptreset.com](https://chatgptreset.com/).
 
-An unofficial one-button internet experiment. Every tap advances a shared global counter; each 10,000,000 taps earns one symbolic collective reset.
+An unofficial one-button internet experiment. Every tap advances a shared global counter; each 10,000,000 taps earns one symbolic collective reset, with a visible campaign maximum of three resets.
 
 ## What exists
 
@@ -11,7 +11,7 @@ An unofficial one-button internet experiment. Every tap advances a shared global
 - Optimistic tap interaction with error recovery.
 - Persistent per-IP “My taps” count alongside the live global total. The server stores only an HMAC hash, never the raw IP address.
 - Matter.js gravity, collision, and stacking: every click launches an OpenAI-mark token from the reset button into a growing pile at the bottom of the screen.
-- Fast press/bounce feedback and a locally generated 110ms tap-pop sound on each click.
+- Tactile press depth, spring-release feedback, supported-device micro vibration, and a locally generated 110ms tap-pop sound on each click.
 - Atomic global counter backed by Neon Postgres.
 - Local in-memory fallback when `DATABASE_URL` is not configured.
 

@@ -46,12 +46,12 @@ export function OgPreview() {
 
           <p className="og-preview-remaining">
             <strong>{formatNumber.format(OG_TARGET - OG_TOTAL_TAPS)}</strong>
-            <span>taps for next reset</span>
+            <span>(taps for next reset)</span>
           </p>
         </div>
 
         <div className="og-preview-stat og-preview-stat-total">
-          <span>Total</span>
+          <span>Total taps</span>
           <strong>{formatNumber.format(OG_TOTAL_TAPS)}/{formatNumber.format(OG_TARGET)}</strong>
         </div>
       </section>

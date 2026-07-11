@@ -143,12 +143,40 @@ a {
   font-weight: 400;
   letter-spacing: -0.02em;
   transform: scale(1);
-  transition: transform 40ms ease-out, background-color 80ms ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.16),
+    0 5px 12px rgba(17, 18, 20, 0.12);
+  overflow: hidden;
+  transition:
+    transform 55ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 55ms ease-out,
+    background-color 80ms ease;
+}
+
+.reset-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reset-button span {
+  position: relative;
+  z-index: 1;
+  transition: transform 55ms ease-out;
 }
 
 .reset-button:hover {
   background: #202124;
-  transform: scale(1.003);
+  transform: translateY(-1px) scale(1.004);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 -11px 20px rgba(0, 0, 0, 0.18),
+    0 7px 16px rgba(17, 18, 20, 0.15);
 }
 
 .reset-button:focus-visible {
@@ -157,28 +185,50 @@ a {
 }
 
 .reset-button:active {
-  transform: scale(0.965);
+  transform: translateY(3px) scale(0.945);
+  box-shadow:
+    inset 0 10px 22px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 3px rgba(17, 18, 20, 0.1);
+}
+
+.reset-button:active span {
+  transform: translateY(2px) scale(0.985);
 }
 
 .reset-button.is-pressed {
-  animation: reset-button-pop 140ms cubic-bezier(0.2, 0.78, 0.28, 1);
+  animation: reset-button-release 210ms cubic-bezier(0.2, 0.78, 0.28, 1);
 }
 
-@keyframes reset-button-pop {
+.reset-button.is-pressed::after {
+  animation: reset-button-flash 210ms ease-out;
+}
+
+@keyframes reset-button-release {
   0% {
-    transform: scale(1);
+    transform: translateY(3px) scale(0.945);
   }
 
-  34% {
-    transform: scale(0.96);
+  52% {
+    transform: translateY(-1px) scale(1.024);
   }
 
-  72% {
-    transform: scale(1.018);
+  76% {
+    transform: translateY(0) scale(0.992);
   }
 
   100% {
-    transform: scale(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes reset-button-flash {
+  0% {
+    opacity: 0.14;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -193,15 +243,16 @@ a {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  color: #202123;
-  font-size: 14px;
+  gap: 7px;
+  color: #73757a;
+  font-size: 13px;
   line-height: 1.15;
   transform: translateY(-50%);
 }
 
 .tap-stat strong {
-  font-size: 14px;
+  color: #151619;
+  font-size: 18px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.025em;
@@ -236,9 +287,10 @@ a {
 }
 
 .taps-remaining span {
-  margin-top: 5px;
-  font-size: 16px;
-  letter-spacing: -0.035em;
+  margin-top: 7px;
+  color: #73757a;
+  font-size: 13px;
+  letter-spacing: -0.02em;
 }
 
 .physics-field {
@@ -400,14 +452,15 @@ a {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  color: #202123;
+  color: #73757a;
   line-height: 1.1;
   font-size: 13px;
   transform: translateY(-50%);
 }
 
 .og-preview-stat strong {
-  font-size: 13px;
+  color: #151619;
+  font-size: 16px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -441,9 +494,10 @@ a {
 }
 
 .og-preview-remaining span {
-  margin-top: 4px;
-  font-size: 15px;
-  letter-spacing: -0.035em;
+  margin-top: 6px;
+  color: #73757a;
+  font-size: 12px;
+  letter-spacing: -0.02em;
 }
 
 .og-preview-footer {
@@ -487,19 +541,19 @@ a {
   }
 
   .taps-remaining span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .tap-stat {
     top: auto;
     bottom: 7%;
     gap: 4px;
-    font-size: 12px;
+    font-size: 11px;
     transform: none;
   }
 
   .tap-stat strong {
-    font-size: 12px;
+    font-size: 15px;
     white-space: nowrap;
   }
 
@@ -522,6 +576,10 @@ a {
   }
 
   .reset-button.is-pressed {
+    animation: none;
+  }
+
+  .reset-button.is-pressed::after {
     animation: none;
   }
 }

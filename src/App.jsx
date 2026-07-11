@@ -6,6 +6,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { LogoPhysics } from "./LogoPhysics.jsx";
 
 const RESET_TARGET = 10_000_000;
+const MAX_RESETS = 3;
 const formatNumber = new Intl.NumberFormat("en-US");
 const buttonProgressStyles = buildStyles({
   pathColor: "#292a2d",
@@ -70,7 +71,7 @@ export function App() {
     if (!audio) return;
 
     audio.currentTime = 0;
-    audio.volume = 0.28;
+    audio.volume = 0.38;
     void audio.play().catch(() => {});
   }
 
@@ -84,7 +85,7 @@ export function App() {
     button.classList.add("is-pressed");
     pressTimerRef.current = window.setTimeout(() => {
       button.classList.remove("is-pressed");
-    }, 150);
+    }, 220);
   }
 
   async function addTap() {
@@ -96,6 +97,7 @@ export function App() {
 
     animateButton();
     playTapSound();
+    navigator.vibrate?.(8);
     setStatus("saving");
     setCampaign((current) => ({
       ...current,
@@ -129,7 +131,7 @@ export function App() {
         <p id="tap-status" className={`header-status ${status}`} aria-live="polite">
           {status === "offline"
             ? "Couldn’t reach the global counter."
-            : `${formatNumber.format(resetsEarned)} ${resetsEarned === 1 ? "reset" : "resets"} earned so far.`}
+            : `${formatNumber.format(Math.min(resetsEarned, MAX_RESETS))}/${MAX_RESETS} resets earned`}
         </p>
         <p className="countdown" aria-live="polite">
           {daysLeft} {daysLeft === 1 ? "day" : "days"} left
@@ -173,12 +175,12 @@ export function App() {
 
           <p id="taps-remaining" className="taps-remaining" aria-live="polite">
             <strong>{formatNumber.format(tapsToNextReset)}</strong>
-            <span>taps for next reset</span>
+            <span>(taps for next reset)</span>
           </p>
         </div>
 
         <div className="tap-stat tap-stat-total">
-          <span>Total</span>
+          <span>Total taps</span>
           <strong>
             {formatNumber.format(campaign.tapCount)}/{formatNumber.format(RESET_TARGET)}
           </strong>
