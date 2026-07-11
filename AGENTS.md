@@ -1,0 +1,27 @@
+# Prototype Instructions
+
+Run the local server yourself and open the preview in the browser available to this environment. Do not give the user server-start instructions when you can run it.
+
+Before making substantial visual changes, use the Product Design plugin's `get-context` skill when the visual source is unclear or no longer matches the current goal. When the user gives durable prototype-specific design feedback, preferences, or decisions, record them in `AGENTS.md`.
+
+When implementing from a selected generated mock, treat that image as the source of truth for layout, component anatomy, density, spacing, color, typography, visible content, and hierarchy.
+
+## Current visual direction
+
+- Source screenshot: `/Users/stefanpopadic/Library/Application Support/CleanShot/media/media_TeG8Kvjab6/CleanShot 2026-07-11 at 16.59.23@2x.png`.
+- Preserve the deliberately sparse composition: wordmark top-left, earned resets top-center, time remaining top-right, “My taps” at the left midpoint, the circular action centered, “Total” at the right midpoint, and taps remaining directly below the button.
+- Keep the UI quiet, flat, monochrome, and extremely simple. Do not add navigation, cards, illustrations, secondary calls to action, or feature sections.
+- The full brand palette is strictly white, graphite, black, and neutral gray. Do not introduce green, sage, or other color accents in the UI, launch graphics, focus states, or icons.
+- The Open Graph image is a 1200×630 export of this exact hero layout. Do not add a separate progress card or use a split promotional layout.
+- The product must remain clearly unofficial and not affiliated with OpenAI.
+- Header typography: wordmark and countdown are 16px, with the earned-reset count centered between them.
+- Footer typography is 14px.
+- “My taps” shows the persistent per-IP count on the left; “Total” shows global taps against the 10,000,000 target on the right; taps remaining uses a two-line centered label beneath the button.
+- Every user-facing number uses English thousands separators, for example `546,050`, never `546050`.
+- The Open Graph export includes a prominent “Tap for reset” headline and the explainer “10,000,000 taps = 1 collective reset” so the idea is immediately clear in a social feed.
+- Each successful interaction immediately launches an OpenAI-mark token from the button into a real gravity/collision simulation; tokens collect along the bottom with a performance cap on visible bodies.
+- Button feedback must feel instant and must not wait for the network request before returning to rest.
+- The central button is surrounded by a live circular progress ring using the same monochrome structure as the Open Graph graphic.
+- Each tap plays a short, quiet synthesized pop and runs a restrained 140ms press/bounce animation from 0.96 to 1.018 before returning to rest.
+- “My taps” is server-owned per IP address. Store only an HMAC hash of the IP, never the raw address.
+- Every physics token is exactly 48px; do not randomize logo size.

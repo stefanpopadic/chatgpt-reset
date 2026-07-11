@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+.vercel/
+.npm-cache/
+.npmrc
+qa/
+design-qa.md
+.DS_Store
+*.log
