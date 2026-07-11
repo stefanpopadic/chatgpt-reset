@@ -38,7 +38,7 @@ const structuredData = structuredDataMatch ? JSON.parse(structuredDataMatch[1]) 
   [`rel="canonical" href="${canonical}"`, "canonical URL"],
   ['name="robots"', "robots meta"],
   ['property="og:title" content="10,000,000 Taps. One ChatGPT Reset."', "Open Graph title"],
-  ['property="og:image" content="https://chatgptreset.com/og-image.png"', "Open Graph image"],
+  ['property="og:image" content="https://chatgptreset.com/og-image.png?v=3d1"', "Open Graph image"],
   ['name="twitter:card" content="summary_large_image"', "X large image card"],
   ['name="twitter:title" content="10,000,000 Taps. One ChatGPT Reset."', "X title"],
   ['type="application/ld+json"', "structured data"],
