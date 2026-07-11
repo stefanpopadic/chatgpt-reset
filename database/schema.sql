@@ -22,6 +22,12 @@ CREATE TABLE IF NOT EXISTS reset_tap_limits (
   minute_count integer NOT NULL DEFAULT 0 CHECK (minute_count >= 0),
   burst_started_at timestamptz NOT NULL DEFAULT now(),
   burst_count integer NOT NULL DEFAULT 0 CHECK (burst_count >= 0),
+  long_started_at timestamptz NOT NULL DEFAULT now(),
+  long_count integer NOT NULL DEFAULT 0 CHECK (long_count >= 0),
   blocked_until timestamptz,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE reset_tap_limits
+  ADD COLUMN IF NOT EXISTS long_started_at timestamptz NOT NULL DEFAULT now(),
+  ADD COLUMN IF NOT EXISTS long_count integer NOT NULL DEFAULT 0 CHECK (long_count >= 0);

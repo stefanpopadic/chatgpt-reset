@@ -28,4 +28,4 @@ When implementing from a selected generated mock, treat that image as the source
 - Each tap plays a short synthesized pop and uses a clearly tactile press: immediate 0.945 depression with inset depth, followed by a 210ms spring release, surface flash, and supported-device micro vibration.
 - “My taps” is server-owned per IP address. Store only an HMAC hash of the IP, never the raw address.
 - Every physics token is exactly 48px; do not randomize logo size.
-- Count only trusted browser interactions that pass a signed same-origin server proof. Allow up to 40 taps per five-second burst and 200 taps per minute per hashed IP; exceeding either limit causes a temporary five-minute cooldown, never a permanent IP ban.
+- Count only trusted browser interactions that pass a signed same-origin server proof. Per hashed IP, allow up to 100 taps per five seconds, 1,000 per minute, and 5,000 per two hours. Exceeding those tiers causes a 10-minute, one-hour, or two-hour cooldown respectively; never use a permanent IP ban.

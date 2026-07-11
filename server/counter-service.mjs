@@ -82,7 +82,10 @@ export function createCounterService(databaseUrl) {
     async increment(visitorHash) {
       const burstWindowSeconds = TAP_RATE_LIMITS.burstWindowMs / 1_000;
       const minuteWindowSeconds = TAP_RATE_LIMITS.minuteWindowMs / 1_000;
-      const cooldownSeconds = TAP_RATE_LIMITS.cooldownMs / 1_000;
+      const longWindowSeconds = TAP_RATE_LIMITS.longWindowMs / 1_000;
+      const burstCooldownSeconds = TAP_RATE_LIMITS.burstCooldownMs / 1_000;
+      const minuteCooldownSeconds = TAP_RATE_LIMITS.minuteCooldownMs / 1_000;
+      const longCooldownSeconds = TAP_RATE_LIMITS.longCooldownMs / 1_000;
       const [row] = await sql`
         WITH guard AS (
           INSERT INTO reset_tap_limits (
@@ -91,11 +94,15 @@ export function createCounterService(databaseUrl) {
             minute_count,
             burst_started_at,
             burst_count,
+            long_started_at,
+            long_count,
             blocked_until,
             updated_at
           )
           VALUES (
             ${visitorHash},
+            statement_timestamp(),
+            1,
             statement_timestamp(),
             1,
             statement_timestamp(),
@@ -124,9 +131,27 @@ export function createCounterService(databaseUrl) {
                 THEN 1
                 ELSE reset_tap_limits.burst_count + 1
               END,
+              long_started_at = CASE
+                WHEN reset_tap_limits.long_started_at <= statement_timestamp() - make_interval(secs => ${longWindowSeconds})
+                THEN statement_timestamp()
+                ELSE reset_tap_limits.long_started_at
+              END,
+              long_count = CASE
+                WHEN reset_tap_limits.long_started_at <= statement_timestamp() - make_interval(secs => ${longWindowSeconds})
+                THEN 1
+                ELSE reset_tap_limits.long_count + 1
+              END,
               blocked_until = CASE
                 WHEN reset_tap_limits.blocked_until > statement_timestamp()
                 THEN reset_tap_limits.blocked_until
+                WHEN (
+                  CASE
+                    WHEN reset_tap_limits.long_started_at <= statement_timestamp() - make_interval(secs => ${longWindowSeconds})
+                    THEN 1
+                    ELSE reset_tap_limits.long_count + 1
+                  END
+                ) > ${TAP_RATE_LIMITS.longLimit}
+                THEN statement_timestamp() + make_interval(secs => ${longCooldownSeconds})
                 WHEN (
                   CASE
                     WHEN reset_tap_limits.minute_started_at <= statement_timestamp() - make_interval(secs => ${minuteWindowSeconds})
@@ -134,14 +159,15 @@ export function createCounterService(databaseUrl) {
                     ELSE reset_tap_limits.minute_count + 1
                   END
                 ) > ${TAP_RATE_LIMITS.minuteLimit}
-                OR (
+                THEN statement_timestamp() + make_interval(secs => ${minuteCooldownSeconds})
+                WHEN (
                   CASE
                     WHEN reset_tap_limits.burst_started_at <= statement_timestamp() - make_interval(secs => ${burstWindowSeconds})
                     THEN 1
                     ELSE reset_tap_limits.burst_count + 1
                   END
                 ) > ${TAP_RATE_LIMITS.burstLimit}
-                THEN statement_timestamp() + make_interval(secs => ${cooldownSeconds})
+                THEN statement_timestamp() + make_interval(secs => ${burstCooldownSeconds})
                 ELSE NULL
               END,
               updated_at = statement_timestamp()

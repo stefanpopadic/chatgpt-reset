@@ -13,7 +13,7 @@ An unofficial one-button internet experiment. Every tap advances a shared global
 - Matter.js gravity, collision, and stacking: every click launches an OpenAI-mark token from the reset button into a growing pile at the bottom of the screen.
 - Tactile press depth, spring-release feedback, supported-device micro vibration, and a locally generated 110ms tap-pop sound on each click.
 - Atomic global counter backed by Neon Postgres.
-- Server-side anti-bot protection: same-origin signed tap proofs, a 40-tap burst ceiling, a 200-tap-per-minute ceiling, and a temporary five-minute cooldown. Rejected requests never change either counter.
+- Server-side anti-bot protection: same-origin signed tap proofs plus progressive limits. More than 100 taps in five seconds pauses tapping for 10 minutes, more than 1,000 in one minute pauses it for one hour, and more than 5,000 in two hours pauses it for two hours. Rejected requests never change either counter.
 - Local in-memory fallback when `DATABASE_URL` is not configured.
 
 ## Launch package
