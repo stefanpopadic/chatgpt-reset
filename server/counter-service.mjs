@@ -175,7 +175,7 @@ export function createCounterService(databaseUrl) {
         ), decision AS (
           SELECT
             visitor_hash,
-            NOT (blocked_until > statement_timestamp()) AS accepted,
+            (blocked_until IS NULL OR blocked_until <= statement_timestamp()) AS accepted,
             CASE
               WHEN blocked_until > statement_timestamp()
               THEN GREATEST(1, CEIL(EXTRACT(EPOCH FROM (blocked_until - statement_timestamp()))))::integer
