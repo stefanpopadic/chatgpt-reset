@@ -1,6 +1,6 @@
 # ChatGPT Reset
 
-Status: active side-project prototype.
+Status: live at [chatgptreset.com](https://chatgptreset.com/).
 
 An unofficial one-button internet experiment. Every tap advances a shared global counter; each 10,000,000 taps earns one symbolic collective reset.
 
@@ -27,7 +27,7 @@ The production URL is set to `https://chatgptreset.com/` across the canonical ta
 - Apex-domain redirect and basic production security headers for Vercel.
 - A repeatable launch check: `npm run launch:check`.
 
-Before the public launch, set `DATABASE_URL` and a stable `IP_HASH_SALT` in the production environment, confirm the campaign start/end dates in Neon, and point both the apex and `www` domain records to the deployment.
+Production runs on Vercel with a persistent Neon counter, a stable per-IP hash salt, and both the apex and `www` domains attached. `www` redirects permanently to the apex domain.
 
 ## Local development
 
