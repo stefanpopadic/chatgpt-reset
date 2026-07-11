@@ -12,7 +12,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Preserve the deliberately sparse composition: wordmark top-left, earned resets top-center, time remaining top-right, “My taps” at the left midpoint, the circular action centered, “Total taps” at the right midpoint, and taps remaining directly below the button.
 - Keep the UI quiet, flat, monochrome, and extremely simple. Do not add navigation, cards, illustrations, secondary calls to action, or feature sections.
 - The full brand palette is strictly white, graphite, black, and neutral gray. Do not introduce green, sage, or other color accents in the UI, launch graphics, focus states, or icons.
-- The Open Graph image is a 1200×630 export of this exact hero layout. Do not add a separate progress card or use a split promotional layout.
+- The Open Graph image is a separate 1200×630 black editorial composition: large explanatory headline on the left and a premium monochrome 3D click scene on the right. The scene shows a sculpted cursor pressing a graphite button while OpenAI-knot tokens and tap numbers burst outward.
 - The product must remain clearly unofficial and not affiliated with OpenAI.
 - Header typography: wordmark and countdown are 16px, with the earned-reset count centered between them.
 - Footer typography is 14px.
@@ -20,7 +20,7 @@ When implementing from a selected generated mock, treat that image as the source
 - Side labels are muted and smaller than their values. The remaining helper is muted, smaller, and parenthesized as “(taps for next reset).”
 - Earned-reset status uses the capped campaign format `0/3 resets earned`; three resets is the visible maximum.
 - Every user-facing number uses English thousands separators, for example `546,050`, never `546050`.
-- The Open Graph export includes a prominent “Tap for reset” headline and the explainer “10,000,000 taps = 1 collective reset” so the idea is immediately clear in a social feed.
+- The Open Graph headline is “10,000,000 taps. One ChatGPT reset.” with a short explainer and white “Tap for reset” pill, so the idea is immediately clear in a social feed.
 - Each successful interaction immediately launches an OpenAI-mark token from the button into a real gravity/collision simulation; tokens collect along the bottom with a performance cap on visible bodies.
 - Button feedback must feel instant and must not wait for the network request before returning to rest.
 - The central button is surrounded by a live circular progress ring using the same monochrome structure as the Open Graph graphic.

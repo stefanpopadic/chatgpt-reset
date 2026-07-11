@@ -20,8 +20,8 @@ An unofficial one-button internet experiment. Every tap advances a shared global
 The production URL is set to `https://chatgptreset.com/` across the canonical tag, Open Graph metadata, structured data, robots file, and sitemap.
 
 - Search title and description, canonical URL, crawler rules, and large image previews.
-- Open Graph and X card metadata with a 1200×630 social graphic.
-- The social graphic is exported from the real centered hero UI at `/?og-preview=1`, so it stays visually consistent with the product instead of using a separate promotional composition.
+- Open Graph and X card metadata with a 1200×630 black editorial social graphic.
+- The social graphic uses a large explanatory headline and a generated monochrome 3D click scene with a cursor pressing the reset button as ChatGPT tokens and tap numbers burst outward. It is rendered deterministically at `/?og-preview=1` so the typography stays crisp.
 - `WebSite`, `WebPage`, and `WebApplication` structured data.
 - Sitemap, robots file, web app manifest, favicon set, Apple icon, and install icons.
 - Apex-domain redirect and basic production security headers for Vercel.
